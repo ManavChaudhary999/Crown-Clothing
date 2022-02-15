@@ -1,23 +1,36 @@
 import React from "react";
+import {Switch, Route} from "react-router-dom";
 import './App.css';
 
-import {SectionData} from "./Data";
 import Directory from "./Components/direcrtory/directory.component";
+
+const Hat = ({history, match}) =>
+  {
+    return (
+    <div>
+      <h1>{`${match.url}/linkUrl`}</h1>
+    </div>
+    );
+  }
 
 class App extends React.Component {
   constructor() 
   {
     super();
     this.state = {
-      Sections: SectionData
     };
+
   }
+
 
   render()
   {
     return(
       <div>
-        <Directory sections={this.state.Sections} />
+        <Switch>
+          <Route exact path="/" component={Directory} />
+          <Route path="/hats" component={Hat} />
+        </Switch>
       </div>
     );
   }
