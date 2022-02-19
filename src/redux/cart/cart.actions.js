@@ -12,3 +12,13 @@ export const addCartItem = (item)=> ({
     type: cartTypes.Add_Cart_Item,
     payload: item
 });
+
+export const removeCartItem = item => ({
+    type: cartTypes.Remove_Cart_Item,
+    payload: item
+});
+
+export const clearCartItem = item => ({
+    type: cartTypes.Clear_Cart_Item,
+    payload: item
+});
