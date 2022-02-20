@@ -3,7 +3,7 @@ import {Switch, Route, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import './App.css';
 
-import Shop from "./Pages/shop/shop.component";
+import ShopPage from "./Pages/shop/shop.component";
 import CheckoutPage from "./Pages/checkout/checkout-page.component";
 
 import Header from "./Components/header/header.component";
@@ -51,7 +51,7 @@ class App extends React.Component {
         <Header />
         <Switch>
           <Route exact path="/" component={Homepage} />
-          <Route path="/shop" component={Shop} />
+          <Route path="/shop" component={ShopPage} />
           <Route exact path="/checkout" component={CheckoutPage} />
           <Route exact path="/signin" render={()=> this.props.currentUser ? (<Redirect to="/" />) : (<SignInSignUp />)} />
         </Switch>
