@@ -5,7 +5,7 @@ import logger from "redux-logger"; // library or middelware to debug log our sta
 
 import rootReducer from "./root.reducer";
 
-const middlewares = [logger];
+const middlewares = [];
 
 if(process.env.NODE_ENV === 'development')
 {
