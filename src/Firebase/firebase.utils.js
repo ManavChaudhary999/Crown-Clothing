@@ -62,4 +62,37 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     }
 
     return userRef;
-};    
+};
+
+export const addShopCollectionAndDocument = async (collectionId, objectToAdd) => {
+    const collectionRef = firestore.collection(collectionId);
+    
+    const batch = firestore.batch();
+
+    objectToAdd.forEach(obj => {
+        const doc = collectionRef.doc();
+        // doc.set(obj); // but this will add only one collection(hats) in one function call, so to overcome that we use batch()
+        batch.set(doc, obj);
+    });
+
+    return await batch.commit(); // asynchronously will add all the collection;
+};
+
+export const convertCollectionsSnapshotToMap = collectionsSnapshot => {
+    const transformedCollection = collectionsSnapshot.docs.map(doc => {
+        const {title, items} = doc.data();
+
+        return{
+            id: doc.id,
+            title,
+            // routeName: title.toLowerCase(), can do this but if name have some special characters than url can't support that
+            routeName: encodeURI(title.toLowerCase()), // automatically converts non supported characters to supported characters
+            items
+        };
+    });
+
+    return transformedCollection.reduce((accumulator, collection) => {
+        accumulator[collection.title.toLowerCase()] = collection; // converting from array to object form (data normalization)
+        return accumulator;
+    }, {}); // initialize value is empty object
+};
