@@ -1,19 +1,33 @@
-//import SHOP_DATA from "./shop.data";
 import {shopActionType} from "./shop.actionType";
 
-// Dont need initial state because fetching collection from firestore
-// const Initial_State = {
-//     collections: SHOP_DATA
-// };
+const Initial_State = {
+    collections: null,
+    isFetching: false,
+    errorMessage: undefined
+};
 
-const shopReducer = (state=null, action) => {
+const shopReducer = (state=Initial_State, action) => {
     switch (action.type) {
-        case shopActionType.UPDATE_COLLECTION:
+        case shopActionType.FETCH_COLLECTIONS_START:
             return {
                 ...state,
-                collections: action.payload
+                isFetching: true
             };
             
+        case shopActionType.FETCH_COLLECTIONS_SUCCESS:
+            return {
+                ...state,
+                collections: action.payload,
+                isFetching: false
+            };
+
+        case shopActionType.FETCH_COLLECTIONS_FAILURE:
+            return {
+                ...state,
+                isFetching: false,
+                errorMessage: action.payload
+            };
+
         default:
             return state;
     }

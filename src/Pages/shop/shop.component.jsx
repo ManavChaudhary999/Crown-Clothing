@@ -6,51 +6,40 @@ import {connect} from "react-redux";
 //import {selectCollectionForPreview} from "../../redux/shop/shop.selectors";
 //import {addShopCollectionAndDocument} from "../../Firebase/firebase.utils";
 
-import {firestore, convertCollectionsSnapshotToMap} from "../../Firebase/firebase.utils";
-import {UpdateShopCollection} from "../../redux/shop/shop.action";
+import {fetchCollectionsStartAsync} from "../../redux/shop/shop.action";
+// import {selectIsCollectionsFetching} from "../../redux/shop/shop.selectors";
+import {selectIsCollectionsLoaded} from "../../redux/shop/shop.selectors";
 
 import WithSpinner from "../../Components/with-spinner/with-spinner.component";
 
 import CollectionPage from "../collection/collection.component";
-import CollectionOverview from "../../Components/collection-overview/collection-overview.component";;
+import CollectionsOverview from "../../Components/collections-overview/collections-overview.component";;
 
-const CollectionOverviewWithSpinner = WithSpinner(CollectionOverview);
+const CollectionOverviewWithSpinner = WithSpinner(CollectionsOverview);
 const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 
 class ShopPage extends React.Component
 {
-    // we can use state like this also without using constructor
-    state = {
-        loading: true
-    };
-
     componentDidMount()
     {   
         // Only For One time
         // const collections = this.props.collections;
         // addShopCollectionAndDocument('collections', collections.map(({title, items}) => ({title, items})));
         
-        const {UpdateCollection} = this.props;
-        const collectionsRef = firestore.collection('collections');
-
-        collectionsRef.get().then(snapshot => {
-            const collectionToMap = convertCollectionsSnapshotToMap(snapshot);
-            UpdateCollection(collectionToMap);
-            this.setState({loading: false});
-        });
+        const {fetchCollectionsStartAsync} = this.props;
+        fetchCollectionsStartAsync();
     }
 
     render()
     {
-        const {match} = this.props;
-        const {loading} = this.state;
+        const {match, isLoaded} = this.props;
 
         return (
             <div className="shop-page">
                 {/* <Route exact path={`${match.path}`} component={CollectionOverview} /> */}
-                <Route exact path={`${match.path}`} render={props => <CollectionOverviewWithSpinner isLoading={loading} {...props} />} />
+                <Route exact path={`${match.path}`} render={props => <CollectionOverviewWithSpinner isLoading={!isLoaded} {...props} />} />
                 {/* <Route path={`${match.path}/:collectionId`} component={CollectionPage} /> */}
-                <Route path={`${match.path}/:collectionId`} render={props => <CollectionPageWithSpinner isLoading={loading} {...props} />} />
+                <Route path={`${match.path}/:collectionId`} render={props => <CollectionPageWithSpinner isLoading={!isLoaded} {...props} />} />
             </div>
         );
     }
@@ -61,8 +50,13 @@ class ShopPage extends React.Component
 //     collections : selectCollectionForPreview(state)
 // });
 
-const mapDispatchToProps = dispatch => ({
-    UpdateCollection: shopCollectionMap => dispatch(UpdateShopCollection(shopCollectionMap))
+const mapStateToProps = state => ({
+    //isFetching : selectIsCollectionsFetching(state)
+    isLoaded: selectIsCollectionsLoaded(state)
 });
 
-export default connect(null, mapDispatchToProps)(ShopPage);
+const mapDispatchToProps = dispatch => ({
+    fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
