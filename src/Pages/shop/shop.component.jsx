@@ -7,16 +7,9 @@ import {connect} from "react-redux";
 //import {addShopCollectionAndDocument} from "../../Firebase/firebase.utils";
 
 import {fetchCollectionsStartAsync} from "../../redux/shop/shop.action";
-// import {selectIsCollectionsFetching} from "../../redux/shop/shop.selectors";
-import {selectIsCollectionsLoaded} from "../../redux/shop/shop.selectors";
 
-import WithSpinner from "../../Components/with-spinner/with-spinner.component";
-
-import CollectionPage from "../collection/collection.component";
-import CollectionsOverview from "../../Components/collections-overview/collections-overview.component";;
-
-const CollectionOverviewWithSpinner = WithSpinner(CollectionsOverview);
-const CollectionPageWithSpinner = WithSpinner(CollectionPage);
+import CollectionPageContainer from "../collection/collection.container";
+import CollectionsOverviewContainer from "../../Components/collections-overview/collections-overview.container";;
 
 class ShopPage extends React.Component
 {
@@ -32,14 +25,12 @@ class ShopPage extends React.Component
 
     render()
     {
-        const {match, isLoaded} = this.props;
+        const {match} = this.props;
 
         return (
             <div className="shop-page">
-                {/* <Route exact path={`${match.path}`} component={CollectionOverview} /> */}
-                <Route exact path={`${match.path}`} render={props => <CollectionOverviewWithSpinner isLoading={!isLoaded} {...props} />} />
-                {/* <Route path={`${match.path}/:collectionId`} component={CollectionPage} /> */}
-                <Route path={`${match.path}/:collectionId`} render={props => <CollectionPageWithSpinner isLoading={!isLoaded} {...props} />} />
+                <Route exact path={`${match.path}`} component={CollectionsOverviewContainer} />
+                <Route path={`${match.path}/:collectionId`} component={CollectionPageContainer} />
             </div>
         );
     }
@@ -50,13 +41,8 @@ class ShopPage extends React.Component
 //     collections : selectCollectionForPreview(state)
 // });
 
-const mapStateToProps = state => ({
-    //isFetching : selectIsCollectionsFetching(state)
-    isLoaded: selectIsCollectionsLoaded(state)
-});
-
 const mapDispatchToProps = dispatch => ({
     fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);
+export default connect(null, mapDispatchToProps)(ShopPage);
