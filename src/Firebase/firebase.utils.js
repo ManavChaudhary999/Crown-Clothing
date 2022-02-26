@@ -27,10 +27,10 @@ export const auth = firebase.auth(); // Old Way
 export const firestore = firebase.firestore();// Old Way
 //export const firestore = getFirestore(); // New Way
 
-const provider = new firebase.auth.GoogleAuthProvider(); // Old Way
+export const googleProvider = new firebase.auth.GoogleAuthProvider(); // Old Way
 //const googleProvider = new GoogleAuthProvider(); // New Way
 
-export const signInWithGoogle = () => auth.signInWithPopup(provider); // Old Way
+// export const signInWithGoogle = () => auth.signInWithPopup(googleProvider); // Old Way
 //export const signInWithGoogle = () => signInWithPopup(auth, googleProvider); // New Way
 
 
@@ -46,12 +46,11 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     // if (!userSnap.exists()) // New Way
     if (!userSnap.exists) // New User
     {
-        const {displayName, email} = userAuth;
+        const {email} = userAuth;
         // const createdAt = Timestamp.now();
         const createdAt = new Date();
 
         const userData = {
-            displayName,
             email,
             createdAt,
             ...additionalData
@@ -96,3 +95,13 @@ export const convertCollectionsSnapshotToMap = collectionsSnapshot => {
         return accumulator;
     }, {}); // initialize value is empty object
 };
+
+
+export const getCurrentUser = () => {
+    return new Promise((resolve, reject) => {
+        const unsubscribeFromAuth = auth.onAuthStateChanged(userRef => {
+            unsubscribeFromAuth();
+            resolve(userRef);
+        }, reject);
+    });
+}

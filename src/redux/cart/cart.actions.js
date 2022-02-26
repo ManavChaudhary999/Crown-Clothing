@@ -22,3 +22,7 @@ export const clearCartItem = item => ({
     type: cartTypes.Clear_Cart_Item,
     payload: item
 });
+
+export const clearCart = () => ({
+    type: cartTypes.Clear_Cart
+});

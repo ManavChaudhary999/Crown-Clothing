@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 //import {selectCollectionForPreview} from "../../redux/shop/shop.selectors";
 //import {addShopCollectionAndDocument} from "../../Firebase/firebase.utils";
 
-import {fetchCollectionsStartAsync} from "../../redux/shop/shop.action";
+import {fetchCollectionsStart} from "../../redux/shop/shop.action";
 
 import CollectionPageContainer from "../collection/collection.container";
 import CollectionsOverviewContainer from "../../Components/collections-overview/collections-overview.container";;
@@ -19,8 +19,8 @@ class ShopPage extends React.Component
         // const collections = this.props.collections;
         // addShopCollectionAndDocument('collections', collections.map(({title, items}) => ({title, items})));
         
-        const {fetchCollectionsStartAsync} = this.props;
-        fetchCollectionsStartAsync();
+        const {fetchCollectionsStart} = this.props;
+        fetchCollectionsStart();
     }
 
     render()
@@ -42,7 +42,7 @@ class ShopPage extends React.Component
 // });
 
 const mapDispatchToProps = dispatch => ({
-    fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync())
+    fetchCollectionsStart: () => dispatch(fetchCollectionsStart())
 });
 
 export default connect(null, mapDispatchToProps)(ShopPage);

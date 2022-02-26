@@ -9,9 +9,9 @@ import CheckoutPage from "./Pages/checkout/checkout-page.component";
 import Header from "./Components/header/header.component";
 import Homepage from "./Pages/homepage/homepage.component";
 import SignInSignUp from "./Pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
-import {auth, createUserProfileDocument} from "./Firebase/firebase.utils";
-import {setCurrentUser} from "./redux/user/user.actions";
+
 import {selectCurrentUser} from "./redux/user/user.selectors";
+import {checkUserSession} from "./redux/user/user.actions";
 
 class App extends React.Component {
   
@@ -19,23 +19,8 @@ class App extends React.Component {
 
   componentDidMount()
     {
-      const {setCurrentUser} = this.props;
-        this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-          if(userAuth)
-          {
-            const userRef = await createUserProfileDocument(userAuth);
-            userRef.onSnapshot(snapshot => {
-              setCurrentUser({
-                id: snapshot.id,
-                ...snapshot.data()
-              });
-            });
-          }
-          else
-          {
-            setCurrentUser(userAuth);
-          }
-        });
+      const {checkUserSession} = this.props;
+      checkUserSession();
     }
     
     componentDidUnMount()
@@ -70,9 +55,8 @@ const mapStateToProps = (state) => ({
   currentUser: selectCurrentUser(state)
 });
 
-// here setCurrentUser is a prop we want to pass in app(or this) component and setCurrentUser(user) is an action
 const mapDispatchToProps = (dispatch) =>({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  checkUserSession: ()=> dispatch(checkUserSession())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
