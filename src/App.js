@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Switch, Route, Redirect} from "react-router-dom";
 import {connect} from "react-redux";
 import './App.css';
@@ -13,36 +13,23 @@ import SignInSignUp from "./Pages/sign-in-and-sign-up/sign-in-and-sign-up.compon
 import {selectCurrentUser} from "./redux/user/user.selectors";
 import {checkUserSession} from "./redux/user/user.actions";
 
-class App extends React.Component {
-  
-  unsubscribeFromAuth = null;
+const App = ({checkUserSession, currentUser}) => {
 
-  componentDidMount()
-    {
-      const {checkUserSession} = this.props;
-      checkUserSession();
-    }
+  useEffect(() =>{
+    checkUserSession();
+  }, [checkUserSession]);
     
-    componentDidUnMount()
-    {
-        this.unsubscribeFromAuth();
-    }
-
-
-  render()
-  {
-    return(
-      <div>
-        <Header />
-        <Switch>
-          <Route exact path="/" component={Homepage} />
-          <Route path="/shop" component={ShopPage} />
-          <Route exact path="/checkout" component={CheckoutPage} />
-          <Route exact path="/signin" render={()=> this.props.currentUser ? (<Redirect to="/" />) : (<SignInSignUp />)} />
-        </Switch>
-      </div>
-    );
-  }
+  return(
+    <div>
+      <Header />
+      <Switch>
+        <Route exact path="/" component={Homepage} />
+        <Route path="/shop" component={ShopPage} />
+        <Route exact path="/checkout" component={CheckoutPage} />
+        <Route exact path="/signin" render={()=> currentUser ? (<Redirect to="/" />) : (<SignInSignUp />)} />
+      </Switch>
+    </div>
+  );
 }
 
 // Old Way without reselect
