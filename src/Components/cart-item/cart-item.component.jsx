@@ -10,5 +10,6 @@ const CartItem = ({cartItem:{imageUrl, price, name, quantity}}) => (
         </div>
     </div>
 );
-
-export default CartItem;
+// Dont want this will rerender for every other cartItem Add, instead only want to render if itself item quantity increases or something changes
+// So using React.memo which memorize the component and stop rerender if its not needed.
+export default React.memo(CartItem);
